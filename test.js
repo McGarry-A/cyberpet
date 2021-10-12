@@ -64,3 +64,14 @@
 // }
 
 // console.log(doMath(2)(3, add))
+
+const timerFunction = () => {
+    
+    setInterval(()=>{
+        
+        console.log(this.hunger)
+        console.log(this.excitement)
+},1000)
+} 
+
+timerFunction()
