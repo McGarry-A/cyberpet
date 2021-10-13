@@ -1,4 +1,5 @@
 let gameOn = true;
+let randomNumber = Math.floor(Math.random()*10+1)
 
 class Pet {
 
@@ -15,52 +16,71 @@ class Pet {
     }
     
     feed(){
-        let randomNumber = Math.floor(Math.random()*10+1)
         this.hunger -= randomNumber
+        this.thirst += randomNumber
+        this.tiredness += randomNumber*2
+        this.excitement += randomNumber
         alert(`${this.name} hunger levels are now ${this.hunger}`)
         return this.hunger
     }
 
     drink(){
-        let randomNumber = Math.floor(Math.random()*10+1)
         this.thirst -= randomNumber 
         alert(`${this._name} thirst levels are now ${this.thirst}`)
         return this.thirst
     }
     
-    play(){
-        let randomNumber = Math.floor(Math.random()*10+1)
-        this.excitement -= randomNumber 
+    play(){        
+        this.excitement += randomNumber 
+        this.thirst += randomNumber
+        this.hunger += randomNumber
+        this.tiredness += randomNumber*2
         alert(`${this._name} excitement levels are now ${this.excitement}`)
         return this.excitement
     }
 
     sleep(){
-        alert(``);
+        alert(`${this.name} is sleeping`);
+        this.tiredness = 0
+        this.thirst += randomNumber
+        this.hunger += randomNumber
+        this.excitement -= randomNumber
+        this.sleeping()
     }
 
     showStats(){
-        alert(`Pets current hunger levels are ${this.hunger}, thirst levels are ${this.thirst} and excitement levels are ${this.excitement} and tiredness levels are ${this.tiredness}`)
+        alert
+        (`Pets current hunger levels are ${this.hunger}
+            thirst levels are ${this.thirst}
+            excitement levels are ${this.excitement} 
+            tiredness levels are ${this.tiredness}`)
         this.choices();
+    }
+
+    start(){
+        alert
+        (`Great job adopting ${this.name}! 
+        Make sure that you keep your cyber pets hunger and thirst levels bellow 100, 
+        and excitement above 0 to not lose your cyber pet!`)
+        alert
+        (`If ${this.name}'s tiredness levels reach 100, you will be timed out of the game for 10 seconds
+        while ${this.name} rests!'`)
+        alert(
+            `Here are ${this.name} stats to begin with`
+        )
+        this.showStats()
     }
 
   
 // How to create a timer function JS 
 
-    // timerFunction(){
-    
-    //     setInterval(()=>{
-    //         this.hunger += 1
-    //         this.thirst += 1
-    //         this.tiredness += 1
-    //         this.excitement -= 1
-    //         console.log(this.excitement)
-    //         console.log(this.hunger)
-
-    // },1000)
-    // } 
-    
-
+    sleeping(){
+    console.log(`timer function`)
+        setTimeout(()=>{
+        alert(`${this.name} is asleep for 10 seconds`)    
+    },10000)
+    this.showStats()
+    } 
 }
 
 class Dog extends Pet {
@@ -72,7 +92,11 @@ class Dog extends Pet {
     }
 
     choices(){
-        let action = prompt(`1 to feed ${this.name}, 2 to give ${this.name} something to drink, 3 to play with ${this.name}, 4 to hear ${this.name} bark and 5 to take ${this.name} bark!`)
+        let action = prompt(`1 to feed ${this.name} 
+            2 to give ${this.name} something to drink
+            3 to play with ${this.name}
+            4 to hear ${this.name} bark 
+            5 to take ${this.name} on a walk!`)
 
         switch (action){
             case "1":
@@ -96,10 +120,18 @@ class Dog extends Pet {
     }
 
     bark(){
-        alert(`${this.name} is barking`);
+        alert(`WOOF WOOF`);
+        this.excitement += randomNumber
+        this.showStats()
     }
     walk(){
         alert(`You walked ${this.name}`);
+        this.hunger += randomNumber*2
+        this.tiredness += randomNumber*2
+        this.excitement += randomNumber
+        this.thirst += randomNumber*2
+        this.weight -= randomNumber
+        this.showStats()
     }
 }
 
@@ -137,6 +169,10 @@ class Rabbit extends Pet {
 
     hop(){
         alert(`${this.name} hops around the garden`)
+        this.tiredness += randomNumber*2
+        this.excitement += randomNumber
+        this.thirst += randomNumber*2
+        this.weight -= randomNumber
     }
 }
 
@@ -183,27 +219,24 @@ const game = () => {
     
     if (typeOfPet == "cat") { 
         let newPet = new Cat (`${petName}`); 
-        newPet.choices(); 
+        // newPet.timerFunction()    
+        newPet.start(); 
     } 
     else if (typeOfPet == "dog") { 
         let newPet = new Dog(`${petName}`); 
-        newPet.choices(); 
+        newPet.start(); 
     }
     else if (typeOfPet == "rabbit") { 
         let newPet = new Rabbit(`${petName}`); 
-        newPet.choices();
+        newPet.start();
     }
+    
 }
 
 const gameEnd = (pet) => {
-    //if excitement is low game will end 
-    //if hunger, thirst, or tiredness are too high, game will end 
-    //call function to start game again
-    
-    if (pet.excitement == 0){ return true }
-    if (pet.hunger == 100){ return true }
-    if (pet.thirst == 100){ return true }
-    if (pet.tiredness == 100){ return true }
+    // if excitement is low game will end and pet will abandon owner
+    // if hunger, thirst are too high, game will end and the pet will abandon order
+    // call function to start game again
 }
 
 game();

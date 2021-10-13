@@ -65,13 +65,31 @@
 
 // console.log(doMath(2)(3, add))
 
-const timerFunction = () => {
+// const timerFunction = () => {
     
-    setInterval(()=>{
+//     setInterval(()=>{
         
-        console.log(this.hunger)
-        console.log(this.excitement)
-},1000)
-} 
+//         console.log(this.hunger)
+//         console.log(this.excitement)
 
-timerFunction()
+//     if (gameEnd(this)){
+//         clearInterval(timer)
+//     }
+// },1000)
+// } 
+
+// timerFunction
+
+// let a = 1 
+// let b = 2
+// let c = 3
+// let d = 4
+
+// console.log(a)
+
+// setTimeout(()=>{
+//     console.log(b)
+// },2000)
+
+// console.log(c)
+// console.log(d)
