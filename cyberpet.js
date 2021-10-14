@@ -1,5 +1,9 @@
-let gameOn = true;
-let randomNumber = Math.floor(Math.random()*10+1)
+let inquirer = require('inquirer');
+let questions = require('./questions')
+// const { type } = require('os');
+
+// let typeOfPet;
+let newPet;
 
 class Pet {
 
@@ -15,72 +19,84 @@ class Pet {
         return this._name
     }
     
-    feed(){
-        this.hunger -= randomNumber
-        this.thirst += randomNumber
-        this.tiredness += randomNumber*2
-        this.excitement += randomNumber
-        alert(`${this.name} hunger levels are now ${this.hunger}`)
-        return this.hunger
-    }
+    // feed(){
+    //     this.hunger -= Math.floor(Math.random()*10+1)
+    //     this.thirst += Math.floor(Math.random()*10+1)
+    //     this.tiredness += Math.floor(Math.random()*10+1)*2
+    //     this.excitement += Math.floor(Math.random()*10+1)
+    //     alert(`${this.name} hunger levels are now ${this.hunger}`)
+    //     return this.hunger
+    // }
 
-    drink(){
-        this.thirst -= randomNumber 
-        alert(`${this._name} thirst levels are now ${this.thirst}`)
-        return this.thirst
-    }
+    // drink(){
+    //     this.thirst -= Math.floor(Math.random()*10+1) 
+    //     alert(`${this._name} thirst levels are now ${this.thirst}`)
+    //     return this.thirst
+    // }
     
-    play(){        
-        this.excitement += randomNumber 
-        this.thirst += randomNumber
-        this.hunger += randomNumber
-        this.tiredness += randomNumber*2
-        alert(`${this._name} excitement levels are now ${this.excitement}`)
-        return this.excitement
-    }
+    // play(){        
+    //     this.excitement += Math.floor(Math.random()*10+1) 
+    //     this.thirst += Math.floor(Math.random()*10+1)
+    //     this.hunger += Math.floor(Math.random()*10+1)
+    //     this.tiredness += Math.floor(Math.random()*10+1)*2
+    //     alert(`${this._name} excitement levels are now ${this.excitement}`)
+    //     return this.excitement
+    // }
 
-    sleep(){
-        alert(`${this.name} is sleeping`);
-        this.tiredness = 0
-        this.thirst += randomNumber
-        this.hunger += randomNumber
-        this.excitement -= randomNumber
-        this.sleeping()
-    }
+    // sleep(){
+    //     alert(`${this.name} is sleeping`);
+    //     this.tiredness = 0
+    //     this.thirst += Math.floor(Math.random()*10+1)
+    //     this.hunger += Math.floor(Math.random()*10+1)
+    //     this.excitement -= Math.floor(Math.random()*10+1)
+    //     this.showStats()
+    // }
 
     showStats(){
-        alert
-        (`Pets current hunger levels are ${this.hunger}
-            thirst levels are ${this.thirst}
-            excitement levels are ${this.excitement} 
-            tiredness levels are ${this.tiredness}`)
-        this.choices();
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'currentStats',
+                message:`${this.name} current hunger levels are ${this.hunger}
+                    thirst levels are ${this.thirst}
+                    excitement levels are ${this.excitement} 
+                    tiredness levels are ${this.tiredness}`
+            }
+        ]).then((answer)=> {
+            if (answer.currentStats === true){
+                if (this.excitement <= 0) {
+                    alert(`${this.name} got bored and abandoned you! Make sure to play with your cyber pet!`)
+                    gameEnd()
+                } else if(this.thirst >= 100){
+                    alert(`${this.name} got has abandoned you! Make sure to ensure your cyber pet is drinking enough!`)
+                    gameEnd()
+                } else if (this.hunger >= 100){
+                    alert(`${this.name} gottoo hungry and abandoned you! Make sure to feed your cyber pet!`)
+                    gameEnd()
+                } else if (this.tiredness >= 60){
+                    alert(`${this.name} got too tired and fell asleep!`)
+                    this.sleep()
+                }
+                this.choices()
+            }
+        }).catch((err)=>{
+            console.log(err)
+        })
+
+        
     }
 
     start(){
-        alert
-        (`Great job adopting ${this.name}! 
-        Make sure that you keep your cyber pets hunger and thirst levels bellow 100, 
-        and excitement above 0 to not lose your cyber pet!`)
-        alert
-        (`If ${this.name}'s tiredness levels reach 100, you will be timed out of the game for 10 seconds
-        while ${this.name} rests!'`)
-        alert(
-            `Here are ${this.name} stats to begin with`
-        )
-        this.showStats()
+        inquirer.prompt(questions.gameInformation).then((answer) => {
+            console.log(answer)
+            console.log('showing stats')
+            this.showStats();
+            
+        }).catch((err)=> {
+            console.log(err);
+        })
     }
 
-  
-// How to create a timer function JS 
-
-    sleeping(){
-    console.log(`timer function`)
-        setTimeout(()=>{
-        alert(`${this.name} is asleep for 10 seconds`)    
-    },10000)
-    this.showStats()
-    } 
 }
 
 class Dog extends Pet {
@@ -92,47 +108,59 @@ class Dog extends Pet {
     }
 
     choices(){
-        let action = prompt(`1 to feed ${this.name} 
-            2 to give ${this.name} something to drink
-            3 to play with ${this.name}
-            4 to hear ${this.name} bark 
-            5 to take ${this.name} on a walk!`)
+        inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'action',
+                    message: `What would you like to do with ${this.name}`,
+                    choices: ['Feed', 'Drink', 'Wrestle', `Bark`, `Go on a Walk`, `Sleep`]
+                }
+        ]).then((answer)=> {
+            switch (answer.action){
+                case "Feed":
+                    this.feed();
+                    break;
+                case "Drink":
+                    this.drink();
+                    break;
+                case "Wrestle":
+                    this.play();
+                    break;
+                case "Bark":
+                    this.bark();
+                    break;
+                case "Go on a Walk":
+                    this.walk();
+                    break;
+                case "Sleep":
+                    this.sleep()
+                    break;
+                default:
+                    return
+            }
+        }).catch((err)=>{
+            console.log(err);
+        })
 
-        switch (action){
-            case "1":
-                this.feed();
-                break;
-            case "2":
-                this.drink();
-                break;
-            case "3":
-                this.play();
-                break;
-            case "4":
-                this.bark();
-                break;
-            case "5":
-                this.walk();
-            default:
-                return
-        }
-        this.showStats()
+    
+    //     this.showStats()
     }
 
-    bark(){
-        alert(`WOOF WOOF`);
-        this.excitement += randomNumber
-        this.showStats()
-    }
-    walk(){
-        alert(`You walked ${this.name}`);
-        this.hunger += randomNumber*2
-        this.tiredness += randomNumber*2
-        this.excitement += randomNumber
-        this.thirst += randomNumber*2
-        this.weight -= randomNumber
-        this.showStats()
-    }
+    // bark(){
+    //     alert(`WOOF WOOF`);
+    //     this.excitement += Math.floor(Math.random()*10+1)
+    //     this.showStats()
+    // }
+    // walk(){
+        
+    //     alert(`You walked ${this.name}`);
+    //     this.hunger += Math.floor(Math.random()*10+1)*2
+    //     this.tiredness += Math.floor(Math.random()*10+1)*2
+    //     this.excitement += Math.floor(Math.random()*10+1)
+    //     this.thirst += Math.floor(Math.random()*10+1)*2
+    //     this.weight -= Math.floor(Math.random()*10+1)
+    //     this.showStats()
+    // }
 }
 
 
@@ -142,38 +170,49 @@ class Rabbit extends Pet {
         super(name)
         this.weight = 20
         this.lovesCarrots = true
-        
     }
 
     choices(){
-        let action = prompt(`1 feeds ${this.name}, 2 makes ${this.name} drink, 3 to play with ${this.name}, 4 to see your ${this.name} hop around!`)
+        inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'action',
+                    choices: ['Feed', 'Drink', 'Play', 'Hop', 'Sleep']
+                }
+        ]).then(answer=>{
 
-        switch (action){
-            case "1":
-                this.feed();
-                break;
-            case "2":
-                this.drink();
-                break;
-            case "3":
-                this.play();
-                break;
-            case "4":
-                this.hop();
-                break;
-            default:
-                return
-        }
-        this.showStats()
-    }
+            console.log(answer)
 
-    hop(){
-        alert(`${this.name} hops around the garden`)
-        this.tiredness += randomNumber*2
-        this.excitement += randomNumber
-        this.thirst += randomNumber*2
-        this.weight -= randomNumber
+            switch (answer.action){
+                case "Feed":
+                    this.feed();
+                    break;
+                case "Drink":
+                    this.drink();
+                    break;
+                case "Play":
+                    this.play();
+                    break;
+                case "Hop":
+                    this.hop();
+                    break;
+                case "Sleep":
+                    this.sleep()
+                    break;
+                default:
+                    return
+            }
+        }).catch(err=>{
+            console.log(err)
+        })
     }
+    // hop(){
+    //     // alert(`${this.name} hops around the garden`)
+    //     this.tiredness += Math.floor(Math.random()*10+1)*2
+    //     this.excitement += Math.floor(Math.random()*10+1)
+    //     this.thirst += Math.floor(Math.random()*10+1)*2
+    //     this.weight -= Math.floor(Math.random()*10+1)
+    // }
 }
 
 class Cat extends Pet {
@@ -184,59 +223,89 @@ class Cat extends Pet {
 
     }
 
-    choices(){
-        let action = prompt(`1 feeds your cat, 2 makes your cat drink, 3 to play with your cat, 4 to hear your cat pur!`)
+     choices(){
+        inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'action',
+                    choices: ['Feed', 'Drink', 'Play', 'Purr', 'Sleep']
+                }
+        ]).then(answer=>{
 
-        switch (action){
-            case "1":
-                this.feed();
-                break;
-            case "2":
-                this.drink();
-                break;
-            case "3":
-                this.play();
-                break;
-            case "4":
-                this.purr();
-                break;
-            default:
-                return
-        }
-        this.showStats()
-    }
+            console.log(answer)
 
-    purr(){
-        alert('your cat is purring at you!')
+            switch (answer.action){
+                case "Feed":
+                    this.feed();
+                    break;
+                case "Drink":
+                    this.drink();
+                    break;
+                case "Play":
+                    this.play();
+                    break;
+                case "Purr":
+                    this.purr();
+                    break;
+                case "Sleep":
+                    this.sleep()
+                    break;
+                default:
+                    return
+            }
+        }).catch(err=>{
+            console.log(err)
+        })
     }
+   
+    //     this.showStats()
+    // }
+
+    // purr(){
+    //     // alert('your cat is purring at you!')
+    // }
 }
 
 const game = () => {
 
-    let typeOfPet = prompt("Is your pet a cat, dog or rabbit?").toLowerCase();
-    
-    let petName = prompt("What is the name of your pet?")
-    
-    if (typeOfPet == "cat") { 
-        let newPet = new Cat (`${petName}`); 
-        // newPet.timerFunction()    
+    inquirer.prompt(questions.selectionQuestions)
+    .then((answer)=> {
+        console.log(answer)
+        selection(answer)
+    }).catch(err => {
+        console.log(err)
+    })
+   
+ }
+
+// const gameEnd = () => {
+//     alert(`restarting the game`)
+//     delete Pet;
+//     game();
+// }
+
+// const loop = () => {
+
+// }
+
+// const stats = () => {
+
+// }
+
+const selection = (answer) => {
+    if (answer.typeOfPet == "Cat") { 
+        newPet = new Cat (`${answer.petName}`);
+        console.log('new pet created')    
         newPet.start(); 
     } 
-    else if (typeOfPet == "dog") { 
-        let newPet = new Dog(`${petName}`); 
+    else if (answer.typeOfPet == "Dog") { 
+        newPet = new Dog(`${answer.petName}`); 
         newPet.start(); 
     }
-    else if (typeOfPet == "rabbit") { 
-        let newPet = new Rabbit(`${petName}`); 
+    else if (answer.typeOfPet == "Rabbit") { 
+        newPet = new Rabbit(`${answer.petName}`); 
         newPet.start();
     }
+}
     
-}
-
-const gameEnd = (pet) => {
-    // if excitement is low game will end and pet will abandon owner
-    // if hunger, thirst are too high, game will end and the pet will abandon order
-    // call function to start game again
-}
-
 game();

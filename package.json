@@ -1,0 +1,22 @@
+{
+  "name": "cyberpetstarter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cyberpet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McGarry-A/cyberpet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/McGarry-A/cyberpet/issues"
+  },
+  "homepage": "https://github.com/McGarry-A/cyberpet#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
+}
