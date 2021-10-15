@@ -19,38 +19,66 @@ class Pet {
         return this._name
     }
     
-    // feed(){
-    //     this.hunger -= Math.floor(Math.random()*10+1)
-    //     this.thirst += Math.floor(Math.random()*10+1)
-    //     this.tiredness += Math.floor(Math.random()*10+1)*2
-    //     this.excitement += Math.floor(Math.random()*10+1)
-    //     alert(`${this.name} hunger levels are now ${this.hunger}`)
-    //     return this.hunger
-    // }
+    feed(){
+        this.hunger -= randomNumberGen()
+        this.tiredness += randomNumberGen()*2
+        this.excitement += randomNumberGen()
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'feedMessage',
+                message: `${this.name} had a meal`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+        
+    }
 
-    // drink(){
-    //     this.thirst -= Math.floor(Math.random()*10+1) 
-    //     alert(`${this._name} thirst levels are now ${this.thirst}`)
-    //     return this.thirst
-    // }
+    drink(){
+        this.thirst -= randomNumberGen()
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'drinkMessage',
+                message: `${this.name} had a drink`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+    }
     
-    // play(){        
-    //     this.excitement += Math.floor(Math.random()*10+1) 
-    //     this.thirst += Math.floor(Math.random()*10+1)
-    //     this.hunger += Math.floor(Math.random()*10+1)
-    //     this.tiredness += Math.floor(Math.random()*10+1)*2
-    //     alert(`${this._name} excitement levels are now ${this.excitement}`)
-    //     return this.excitement
-    // }
+    play(){        
+        this.excitement += randomNumberGen() 
+        this.thirst += randomNumberGen()
+        this.hunger += randomNumberGen()
+        this.tiredness += randomNumberGen()*2
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'playMessage',
+                message: `${this.name} gets excited playing with you`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+    }
 
-    // sleep(){
-    //     alert(`${this.name} is sleeping`);
-    //     this.tiredness = 0
-    //     this.thirst += Math.floor(Math.random()*10+1)
-    //     this.hunger += Math.floor(Math.random()*10+1)
-    //     this.excitement -= Math.floor(Math.random()*10+1)
-    //     this.showStats()
-    // }
+    sleep(){
+        this.tiredness = 0
+        this.thirst += randomNumberGen()
+        this.hunger += randomNumberGen()
+        this.excitement -= randomNumberGen()
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'sleepMessage',
+                message: `${this.name} is fast asleep`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+    }
 
     showStats(){
         inquirer.prompt([
@@ -65,19 +93,49 @@ class Pet {
         ]).then((answer)=> {
             if (answer.currentStats === true){
                 if (this.excitement <= 0) {
-                    alert(`${this.name} got bored and abandoned you! Make sure to play with your cyber pet!`)
-                    gameEnd()
+                    inquirer.prompt([
+                        {
+                            type: 'confirm',
+                            name: 'gameEndExcitement',
+                            message:`${this.name} has abandoned you from boredom! Make sure to play with your pet.`
+                        }
+                    ]).then(()=>{
+                        gameEnd()
+                    })
+                    
                 } else if(this.thirst >= 100){
-                    alert(`${this.name} got has abandoned you! Make sure to ensure your cyber pet is drinking enough!`)
-                    gameEnd()
+                    inquirer.prompt([
+                        {
+                            type: 'confirm',
+                            name: 'gameEndThirst',
+                            message:`${this.name} has abandoned you from thirst! Make sure to water with your pet.`
+                        }
+                    ]).then(()=>{
+                        gameEnd()
+                    })
                 } else if (this.hunger >= 100){
-                    alert(`${this.name} gottoo hungry and abandoned you! Make sure to feed your cyber pet!`)
-                    gameEnd()
+                    inquirer.prompt([
+                        {
+                            type: 'confirm',
+                            name: 'gameEndHunger',
+                            message:`${this.name} has abandoned you from boredom! Make sure to feed your pet.`
+                        }
+                    ]).then(()=>{
+                        gameEnd()
+                    })
                 } else if (this.tiredness >= 60){
-                    alert(`${this.name} got too tired and fell asleep!`)
-                    this.sleep()
+                    inquirer.prompt([
+                        {
+                            type: 'confirm',
+                            name: 'tiredness',
+                            message:`${this.name} got too tired and fell asleep!`
+                        }
+                    ]).then(()=>{
+                        this.sleep()
+                    })
+                } else {
+                    this.choices()
                 }
-                this.choices()
             }
         }).catch((err)=>{
             console.log(err)
@@ -87,11 +145,8 @@ class Pet {
     }
 
     start(){
-        inquirer.prompt(questions.gameInformation).then((answer) => {
-            console.log(answer)
-            console.log('showing stats')
+        inquirer.prompt(questions.gameInformation).then(() => {
             this.showStats();
-            
         }).catch((err)=> {
             console.log(err);
         })
@@ -141,26 +196,39 @@ class Dog extends Pet {
         }).catch((err)=>{
             console.log(err);
         })
-
-    
-    //     this.showStats()
     }
 
-    // bark(){
-    //     alert(`WOOF WOOF`);
-    //     this.excitement += Math.floor(Math.random()*10+1)
-    //     this.showStats()
-    // }
-    // walk(){
+    bark(){
+        this.excitement += Math.floor(Math.random()*10+1)
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'barkMessage',
+                message: `WOOFWOOF!`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
         
-    //     alert(`You walked ${this.name}`);
-    //     this.hunger += Math.floor(Math.random()*10+1)*2
-    //     this.tiredness += Math.floor(Math.random()*10+1)*2
-    //     this.excitement += Math.floor(Math.random()*10+1)
-    //     this.thirst += Math.floor(Math.random()*10+1)*2
-    //     this.weight -= Math.floor(Math.random()*10+1)
-    //     this.showStats()
-    // }
+    }
+    walk(){
+        
+        this.hunger += Math.floor(Math.random()*10+1)*2
+        this.tiredness += Math.floor(Math.random()*10+1)*2
+        this.excitement += Math.floor(Math.random()*10+1)
+        this.thirst += Math.floor(Math.random()*10+1)*2
+        this.weight -= Math.floor(Math.random()*10+1)
+
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'walkMessage',
+                message: `You took ${this.name} on a walk`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+    }
 }
 
 
@@ -180,8 +248,6 @@ class Rabbit extends Pet {
                     choices: ['Feed', 'Drink', 'Play', 'Hop', 'Sleep']
                 }
         ]).then(answer=>{
-
-            console.log(answer)
 
             switch (answer.action){
                 case "Feed":
@@ -206,13 +272,23 @@ class Rabbit extends Pet {
             console.log(err)
         })
     }
-    // hop(){
-    //     // alert(`${this.name} hops around the garden`)
-    //     this.tiredness += Math.floor(Math.random()*10+1)*2
-    //     this.excitement += Math.floor(Math.random()*10+1)
-    //     this.thirst += Math.floor(Math.random()*10+1)*2
-    //     this.weight -= Math.floor(Math.random()*10+1)
-    // }
+    hop(){
+        // alert(`${this.name} hops around the garden`)
+        this.tiredness += randomNumberGen()*2
+        this.excitement += randomNumberGen()
+        this.thirst += randomNumberGen()*2
+        this.weight -= randomNumberGen()
+
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'hopMessage',
+                message: `${this.name} hops around the garden`
+            }
+        ]).then(()=>{
+            this.showStats()
+        })
+    }
 }
 
 class Cat extends Pet {
@@ -257,20 +333,22 @@ class Cat extends Pet {
             console.log(err)
         })
     }
-   
-    //     this.showStats()
-    // }
 
-    // purr(){
-    //     // alert('your cat is purring at you!')
-    // }
+    purr(){
+        inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'purMessage',
+                message: `PURR`
+            }
+        ])
+    }
 }
 
 const game = () => {
 
     inquirer.prompt(questions.selectionQuestions)
     .then((answer)=> {
-        console.log(answer)
         selection(answer)
     }).catch(err => {
         console.log(err)
@@ -278,19 +356,23 @@ const game = () => {
    
  }
 
-// const gameEnd = () => {
-//     alert(`restarting the game`)
-//     delete Pet;
-//     game();
-// }
-
-// const loop = () => {
-
-// }
-
-// const stats = () => {
-
-// }
+const gameEnd = () => {
+    inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'restartGame',
+            message: `Press enter to restart the game`
+        }
+    ]).then(answer => {
+        if (answer.restartGame == false){ 
+            return
+        }
+    }).catch(err => {
+        console.log(err)
+    })
+    delete Pet;
+    game();
+}
 
 const selection = (answer) => {
     if (answer.typeOfPet == "Cat") { 
@@ -307,5 +389,8 @@ const selection = (answer) => {
         newPet.start();
     }
 }
-    
+
+const randomNumberGen = () => {
+    return Math.floor(Math.random()*10+1)
+}
 game();
